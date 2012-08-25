@@ -34,6 +34,8 @@ Add to `Bootstrap.php`:
 ```php
 <?php
 
+use \Suin\Yaf\Twig\Twig;
+
 class Bootstrap extends Yaf_Bootstrap_Abstract
 {
 
