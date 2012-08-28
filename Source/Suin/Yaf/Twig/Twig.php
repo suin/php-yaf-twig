@@ -7,8 +7,11 @@ use \Twig_Environment;
 
 class Twig implements \Yaf_View_Interface
 {
-	protected $templateDir;
-	protected $options = array();
+	/** @var \Twig_Loader_Filesystem */
+	protected $loader;
+	/** @var \Twig_Environment */
+	protected $twig;
+
 	protected $variables = array();
 
 	/**
@@ -17,8 +20,8 @@ class Twig implements \Yaf_View_Interface
 	 */
 	public function __construct($templateDir, array $options = array())
 	{
-		$this->templateDir = $templateDir;
-		$this->options = $options;
+		$this->loader = new Twig_Loader_Filesystem($templateDir);
+		$this->twig   = new Twig_Environment($this->loader, $options);
 	}
 
 	/**
@@ -57,6 +60,15 @@ class Twig implements \Yaf_View_Interface
 	}
 
 	/**
+	 * Return twig instance
+	 * @return \Twig_Environment
+	 */
+	public function getTwig()
+	{
+		return $this->twig;
+	}
+
+	/**
 	 * @param string $name
 	 * @param mixed $value
 	 * @return bool
@@ -81,7 +93,7 @@ class Twig implements \Yaf_View_Interface
 	 */
 	public function getScriptPath()
 	{
-		return $this->templateDir;
+		return $this->loader->getPaths();
 	}
 
 	/**
@@ -96,8 +108,7 @@ class Twig implements \Yaf_View_Interface
 			$this->variables = array_merge($this->variables, $variables);
 		}
 
-		$twig = new Twig_Environment(new Twig_Loader_Filesystem($this->templateDir), $this->options);
-		return $twig->loadTemplate($template)->render($this->variables);
+		return $this->twig->loadTemplate($template)->render($this->variables);
 	}
 
 	/**
@@ -106,6 +117,6 @@ class Twig implements \Yaf_View_Interface
 	 */
 	public function setScriptPath($templateDir)
 	{
-		$this->templateDir = $templateDir;
+		$this->loader->setPaths($templateDir);
 	}
 }
