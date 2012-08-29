@@ -93,7 +93,8 @@ class Twig implements \Yaf_View_Interface
 	 */
 	public function getScriptPath()
 	{
-		return $this->loader->getPaths();
+		$paths = $this->loader->getPaths();
+		return reset($paths);
 	}
 
 	/**
